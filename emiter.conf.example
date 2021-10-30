@@ -3,8 +3,11 @@
 
     "home_path": "/home/liquidsoap/emiter/",
     "path_schedules": "/home/liquidsoap/emiter/data/",
+    "path_playlists": "/home/liquidsoap/emiter/data/",
     "path_auditions": "/srv/ra/audycje/",
-    "path_playlist": "/srv/ra/",
+    "path_temp_records": "/srv/record/",
+    "path_liquidsoap_bin": "/home/liquidsoap/.opam/4.08.0/bin/liquidsoap",
+    "url_program_api":"https://cloud.radioaktywne.pl/api",
 
     "input_studio_prefix":"",
     "input_studio_user":"source",
@@ -18,9 +21,55 @@
     "output_name": "Radio Aktywne",
     "output_desc": "Radio Aktywne",
     "output_url": "http://radioaktywne.pl",
-    "output_alsa": "true",
 
     "default_user": "liquidsoap",
-    "file_uid": 1001,
-    "file_gid": 1001
+    "file_uid": 33,
+    "file_gid": 133,
+
+    "auto_playlist_config":{
+        "music_containers": {
+            "MUSD": "/srv/ra/playlista/dzien/",
+            "MUSN": "/srv/ra/playlista/noc/",
+            "JIN": "/srv/ra/jingle/"
+        },
+
+        "playlists": {
+            "muzyka_dzien": {
+
+                "description":"Muzyka w dzień (6-22)",
+                "mixing": {
+                    "JIN":{
+                        "min":1,
+                        "max":1,
+                        "track_repeat":3
+                    },
+                    "MUSD":{
+                        "min":1,
+                        "max":3,
+                        "track_repeat":200,
+                        "album_repeat":100,
+                        "artist_repeat":50 
+                    }
+                }
+            },
+            "muzyka_noc": {
+
+                "description":"Muzyka w nocy (22-6)",
+                "mixing":{
+                    "JIN":{
+                        "min":1,
+                        "max":1,
+                        "track_repeat":3
+                    },
+                    "MUSN":{
+                        "min":2,
+                        "max":5,
+                        "track_repeat":200,
+                        "album_repeat":100,
+                        "artist_repeat":50 
+                    }
+                }
+            }
+        }
+    }
 }

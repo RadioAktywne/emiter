@@ -46,8 +46,7 @@ RUN apt-get -y update && \
     python3 \
     python3-pip \
     socat \
-    procps \
-    ffmpeg
+    procps
 
 # Set up filesystem and user
 USER root
@@ -71,8 +70,8 @@ RUN eval `opam config env`
 RUN opam install -y ssl opus cry flac inotify lame mad ogg fdkaac samplerate taglib vorbis xmlplaylist srt liquidsoap
 
 # Install python requirements
-RUN mkdir /home/liquidsoap/tmp
-WORKDIR /home/liquidsoap/tmp
+#RUN mkdir /home/liquidsoap
+WORKDIR /home/liquidsoap
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
@@ -80,18 +79,6 @@ RUN pip3 install -r requirements.txt
 #consider bind mount for changing conf from host in fly 
 USER root
 COPY emiter.conf /etc/
-
-#create temporary record dir
-RUN mkdir /srv/record/
-RUN chown liquidsoap:liquidsoap /srv/record/
-
-#create log dir
-RUN mkdir /var/log/emiter/
-RUN chown liquidsoap:liquidsoap /var/log/emiter
-
-#create run dir
-RUN mkdir /var/run/emiter/
-RUN chown liquidsoap:liquidsoap /var/run/emiter
 
 #set timezone
 # ENV TZ does not work for cron
@@ -102,6 +89,12 @@ COPY cron.tab /tmp/
 RUN cat /tmp/cron.tab >> /etc/crontab
 RUN rm /tmp/cron.tab
 
+#pre-instalation commands (create dirs in /var/log, /var/run etc.)
+COPY INSTALL.sh /tmp/
+RUN sh /tmp/INSTALL.sh
+RUN rm /tmp/INSTALL.sh
+
+#add files to /home/liquidsoap/emiter TODO in release
 
 WORKDIR /home/liquidsoap/emiter
 
@@ -110,6 +103,4 @@ WORKDIR /home/liquidsoap/emiter
 # - run cron in fg
 #ENTRYPOINT ["sh", "/home/liquidsoap/emiter"]
 
-USER root
 ENTRYPOINT ["/usr/sbin/cron", "-f"]
-#ENTRYPOINT ["whoami"]

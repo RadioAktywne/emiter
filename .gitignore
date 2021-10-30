@@ -17,8 +17,7 @@ emiter/toolbox/api_integration/.credentials
 emiter/toolbox/api_integration/*.json
 emiter/data/muzyka_*
 emiter/data/*.json
-emiter/data/programs
-emiter/data/timeslots
+emiter/data
 
 *.pid
 .vscode
