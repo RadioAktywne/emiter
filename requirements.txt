@@ -1,0 +1,4 @@
+psutil==5.7.0
+mutagen==1.45.1
+audioread==2.1.8
+pymad=0.10

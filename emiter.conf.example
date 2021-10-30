@@ -1,0 +1,26 @@
+{
+    "telnet_port":"2137",
+
+    "home_path": "/home/liquidsoap/emiter/",
+    "path_schedules": "/home/liquidsoap/emiter/data/",
+    "path_auditions": "/srv/ra/audycje/",
+    "path_playlist": "/srv/ra/",
+
+    "input_studio_prefix":"",
+    "input_studio_user":"source",
+    "input_studio_password": "####",
+
+    "output_prefix":"ra",
+    "output_host": "localhost",
+    "output_port": "8000",
+    "output_password": "####",
+    
+    "output_name": "Radio Aktywne",
+    "output_desc": "Radio Aktywne",
+    "output_url": "http://radioaktywne.pl",
+    "output_alsa": "true",
+
+    "default_user": "liquidsoap",
+    "file_uid": 1001,
+    "file_gid": 1001
+}

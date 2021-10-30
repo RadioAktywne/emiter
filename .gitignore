@@ -1,0 +1,27 @@
+
+# Created by https://www.gitignore.io/api/python
+# Edit at https://www.gitignore.io/?templates=python
+
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+### emiter ###
+emiter.conf
+emiter/toolbox/api_integration/.credentials
+emiter/toolbox/api_integration/*.json
+emiter/data/muzyka_*
+emiter/data/*.json
+emiter/data/programs
+emiter/data/timeslots
+
+*.pid
+.vscode
+
+### playlisty
+
