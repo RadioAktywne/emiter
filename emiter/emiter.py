@@ -153,11 +153,16 @@ else:
 
             if aud['changed']:
                 #czy to nie jest playlista ani nie powtorka?
-                if aud['replay'] == False and aud['found']:
-                    logging.info("audycja "+aud['slug']+" zakończyła się")
-                    file.merge_record_tracks(aud["slug"])
+               #czy to nie jest playlista
+                if aud['found']:
+                    #czy to nie powtórka?
+                    if aud["replay"] == False:
+                        logging.info("audycja "+aud['slug']+" zakończyła się")
+                        file.merge_record_tracks(aud["slug"])
+                    else:
+                        logging.info("była powtórka, nic nie robię")
                 else:
-                    logging.info("była playlista lub powtorka, nic nie robie")
+                    logging.info("była playlista, nic nie robie")
             else:
                 logging.info("nie zakończyła się żadna audycja")
 
@@ -166,16 +171,22 @@ else:
             aud = schedule.get_program_with_split_now(False,time_margin=15)
 
             if aud['changed']:
-                #czy to nie jest playlista ani nie powtorka?
-                if aud['replay'] == False and aud['found']:
-                    logging.info("audycja "+aud['slug']+" zakończyła się")
-                    #sprawdź, czy przypadkiem jeszcze nie gra plik
-                    if status["source"] == "playout" and aud['slug'] in status['filename']:
-                        logging.info("Chyba nie zakończyło się granie audycji " + aud['slug'] + ". Gra plik "+ status['filename'])
-                    else:
+                #czy to nie jest playlista
+                if aud['found']:
+                    #czy to nie powtórka?
+                    if aud["replay"] == False:
+                        logging.info("audycja "+aud['slug']+" zakończyła się")
+                        #sprawdź, czy przypadkiem jeszcze nie gra plik
+                        if status["source"] == "playout" and aud['slug'] in status['filename']:
+                            logging.info("Chyba nie zakończyło się granie audycji " + aud['slug'] + ". Gra plik "+ status['filename']+". Skipuje..")
+                            liquidsoap.send("PGM.skip")
+                            time.sleep(5)
+                        
                         file.clear_playout(aud['slug'])
+                    else:
+                        logging.info("była powtórka, nic nie robię")
                 else:
-                    logging.info("była playlista lub powtorka, nic nie robie")
+                    logging.info("była playlista, nic nie robie")
             else:
                 logging.info("nie zakończyła się żadna audycja")
 
@@ -207,7 +218,6 @@ else:
 
             #1.utwórz foldery nowych audycji
             logging.info("Tworzenie nowych katalogów audycji...")
-            schedule = program.Program("program")
             auds = schedule.list_all_slugs()
             file.update_audition_dirs(auds)
 
