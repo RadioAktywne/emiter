@@ -73,11 +73,11 @@ RUN opam install -y ssl opus cry flac inotify lame mad ogg fdkaac samplerate tag
 #RUN mkdir /home/liquidsoap
 WORKDIR /home/liquidsoap
 COPY requirements.txt .
+USER root
 RUN pip3 install -r requirements.txt
 
 #copy config file
 #consider bind mount for changing conf from host in fly 
-USER root
 COPY emiter.conf /etc/
 
 #set timezone

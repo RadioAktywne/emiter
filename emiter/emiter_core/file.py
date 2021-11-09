@@ -47,7 +47,8 @@ def update_audition_dirs(slugs):
     #sprawdza wszystkie audycje i dodaje nowe, jeśli się takowe pojawiły
     for slug in slugs:
         if os.path.isfile(cfg.cfg['path_auditions']+slug) == False:
-            create_audition_dirs(slug)
+            if slug is not "":
+                create_audition_dirs(slug)
 
     #todo może jakieś archiwizowanie dawnych audycji
 

@@ -69,7 +69,10 @@ now_meta = ref([])
 def capture_meta(m)
 	#przechwyt metadanych
 
-	now_meta := m
+	if m["filename"] != "" or m["source"] == "studio" then
+		now_meta := m
+	end
+
 	file_path = "/var/log/emiter/log.csv"
 	
 	timestamp = int_of_float(time())
