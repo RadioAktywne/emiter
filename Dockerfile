@@ -94,6 +94,9 @@ COPY INSTALL.sh /tmp/
 RUN sh /tmp/INSTALL.sh
 RUN rm /tmp/INSTALL.sh
 
+#all commands to run at entrypoint
+COPY emiter.sh /home/liquidsoap/
+
 #add files to /home/liquidsoap/emiter TODO in release
 
 WORKDIR /home/liquidsoap/emiter
@@ -101,6 +104,6 @@ WORKDIR /home/liquidsoap/emiter
 # START everything
 # - rebuild playlists and start liquidsoap in bg (emiter.py start) TODO
 # - run cron in fg
-#ENTRYPOINT ["sh", "/home/liquidsoap/emiter"]
+ENTRYPOINT ["sh", "/home/liquidsoap/emiter.sh"]
 
-ENTRYPOINT ["/usr/sbin/cron", "-f"]
+#ENTRYPOINT ["/usr/sbin/cron", "-f"]

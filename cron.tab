@@ -1,6 +1,9 @@
+
 29,59 * * * *	liquidsoap	/home/liquidsoap/emiter/emiter.py push playout >> /var/log/emiter/emiter.log
 1,31 * * * *	liquidsoap	/home/liquidsoap/emiter/emiter.py force_skip >> /var/log/emiter/emiter.log
 20,50 * * * *	liquidsoap	/home/liquidsoap/emiter/emiter.py archive_replay >> /var/log/emiter/emiter.log
 5,35 * * * *	liquidsoap	/home/liquidsoap/emiter/emiter.py set_replay >> /var/log/emiter/emiter.log
 10,40 * * * *	liquidsoap	/home/liquidsoap/emiter/emiter.py clear_playout >> /var/log/emiter/emiter.log
-
+0 3 * * *	liquidsoap	/home/liquidsoap/emiter/emiter.py maintain >> /var/log/emiter/emiter.log
+10 3 * * *	liquidsoap	/home/liquidsoap/emiter/emiter.py rebuild_playlist muzyka_dzien >> /var/log/emiter/emiter.log
+10 15 * * *	liquidsoap	/home/liquidsoap/emiter/emiter.py rebuild_playlist muzyka_noc >> /var/log/emiter/emiter.log
