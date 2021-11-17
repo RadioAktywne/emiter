@@ -98,6 +98,8 @@ RUN rm /tmp/INSTALL.sh
 COPY emiter.sh /home/liquidsoap/
 
 #add files to /home/liquidsoap/emiter TODO in release
+COPY --chown=liquidsoap:liquidsoap emiter/ /home/liquidsoap/emiter/
+RUN chmod +x /home/liquidsoap/emiter/emiter.py
 
 WORKDIR /home/liquidsoap/emiter
 

@@ -244,27 +244,27 @@ output.icecast(%vorbis(quality=0.8),
 	url = cfg["output_url"],
 	radio)
 
-output.icecast(%mp3(bitrate=256), 
-	id = "PGM_mp3", 
-	icy_metadata="false",
-	encoding="UTF-8",
-	host = cfg["output_host"], 
-	port = int_of_string(cfg["output_port"]), 
-	password = cfg["output_password"], 
-	mount = cfg["output_prefix"]^"mp3",
-	genre = "",
-	name = cfg["output_name"],
-	description = cfg["output_desc"],
-	url = cfg["output_url"],
-	radio)
+# output.icecast(%mp3(bitrate=256), 
+# 	id = "PGM_mp3", 
+# 	icy_metadata="false",
+# 	encoding="UTF-8",
+# 	host = cfg["output_host"], 
+# 	port = int_of_string(cfg["output_port"]), 
+# 	password = cfg["output_password"], 
+# 	mount = cfg["output_prefix"]^"mp3",
+# 	genre = "",
+# 	name = cfg["output_name"],
+# 	description = cfg["output_desc"],
+# 	url = cfg["output_url"],
+# 	radio)
 
-output.icecast(%wav, 
-	id = "PGM_local", 
-	host = "172.17.0.1", 
-	port = 8010,
-	password = "local", 
-	mount = "local",
-	radio)
+# output.icecast(%wav, 
+# 	id = "PGM_local", 
+# 	host = "172.17.0.1", 
+# 	port = 8010,
+# 	password = "local", 
+# 	mount = "local",
+# 	radio)
 
 #TODO szpieg
 
