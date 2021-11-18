@@ -9,17 +9,6 @@ from emiter_core import *
 import json
 import logging
 
-#from toolbox.api_integration import get_timeslots
-
-
-#logging setup
-if sys.argv[1] == "get":
-    #ponieważ get wysyła informacje w stdout do innych procesów, loguj tylko błędy
-    logging.basicConfig(level=logging.ERROR,format='%(asctime)s %(levelname)s: %(message)s')
-else:
-    #normalny loglevel
-    logging.basicConfig(handlers=[logging.FileHandler('/var/log/emiter/emiter.log'),logging.StreamHandler()], level=logging.DEBUG,format='%(asctime)s %(levelname)s: %(message)s')
-
 
 if sys.argv[1] == "start":
     #get_timeslots.sync(cfg.cfg["path_schedules"])
@@ -55,16 +44,22 @@ elif sys.argv[1] == "rebuild_playlist":
         autoplaylist.rebuild_all_playlists()
     else:
         autoplaylist.build_playlist(sys.argv[2])
-    
-elif sys.argv[1] == "update":
-    
-    #TODO
-    #wywalamy integrację przez pliki
-    #przesyłamy dane o puszkach w jakiś inny sposób
-    #np przez API
-    #zmieniamy format po stronie klienta na zgodny z API
-    print("Under construction")
 
+elif sys.argv[1] == "maintain":
+    #komenda konserwująca
+
+    #wczytaj ramówkę
+    schedule = program.Program(cfg.cfg["url_program_api"])
+
+    #1.utwórz foldery nowych audycji
+    logging.info("Tworzenie nowych katalogów audycji...")
+    auds = schedule.list_all_slugs()
+    file.update_audition_dirs(auds)
+
+    #3. jeśli nie studio, czyść nagrania tymczasowe w /srv/record
+    file.clear_cache_records()
+    
+    #4. czyść stare pliki ze szpiega
 
 else:
     #komendy "produkcyjne"
@@ -212,21 +207,6 @@ else:
 
         elif sys.argv[1] == "status":
             print(status)
-
-        elif sys.argv[1] == "maintain":
-            #komenda konserwująca
-
-            #1.utwórz foldery nowych audycji
-            logging.info("Tworzenie nowych katalogów audycji...")
-            auds = schedule.list_all_slugs()
-            file.update_audition_dirs(auds)
-
-            #3. jeśli nie studio, czyść nagrania tymczasowe w /srv/record
-            file.clear_cache_records()
-            
-            #4. czyść stare pliki ze szpiega
-
-            
 
         else:
             logging.warning("nieznana komenda")

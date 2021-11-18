@@ -7,3 +7,4 @@
 0 3 * * *	liquidsoap	/home/liquidsoap/emiter/emiter.py maintain >> /var/log/emiter/emiter.log
 10 3 * * *	liquidsoap	/home/liquidsoap/emiter/emiter.py rebuild_playlist muzyka_dzien >> /var/log/emiter/emiter.log
 10 15 * * *	liquidsoap	/home/liquidsoap/emiter/emiter.py rebuild_playlist muzyka_noc >> /var/log/emiter/emiter.log
+#
