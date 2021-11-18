@@ -10,6 +10,8 @@ import json
 import logging
 
 
+logging.basicConfig(handlers=[logging.FileHandler('/var/log/emiter/emiter.log'),logging.StreamHandler()], level=logging.INFO,format='%(asctime)s %(levelname)s: %(message)s')
+
 if sys.argv[1] == "start":
     #get_timeslots.sync(cfg.cfg["path_schedules"])
     autoplaylist.rebuild_all_playlists()
