@@ -31,7 +31,9 @@ def create(path):
     except FileExistsError:
         logging.info(path + " Juz istnieje")
     except PermissionError:
-        logging.info("[PER] skrypt nie ma uprawnień do tego. Musi to zrobić root.")
+        logging.error("Skrypt nie ma uprawnień do tego. Musi to zrobić root.")
+    except FileNotFoundError:
+        logging.error("Katalog matka nie istnieje")
 
 
 def create_audition_dirs(slug):
