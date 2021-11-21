@@ -34,7 +34,10 @@ class Program:
                 f.write(rq.text)
                 f.close()
             #zmień uprawnienia
-            os.chmod(cfg.cfg['path_schedules']+"timeslots_"+sufix, 0o777)
+            try:
+                os.chmod(cfg.cfg['path_schedules']+"timeslots_"+sufix, 0o777)
+            except PermissionError:
+                pass
 
         except JSONDecodeError:
             
@@ -57,7 +60,10 @@ class Program:
                 f.write(rq.text)
                 f.close()
             #zmień uprawnienia
-            os.chmod(cfg.cfg['path_schedules']+"programs_"+sufix, 0o777)
+            try:
+                os.chmod(cfg.cfg['path_schedules']+"programs_"+sufix, 0o777)
+            except PermissionError:
+                pass
 
         except JSONDecodeError:
             
