@@ -266,7 +266,8 @@ output.icecast(%vorbis(quality=0.8),
 # 	mount = "local",
 # 	radio)
 
-#TODO szpieg
+#szpieg
+output.file(%vorbis(quality=0.6),cfg["path_spy"]^"%Y-%m-%d_%H-%M-%S.ogg",radio,reopen_when={0m},fallible=true)
 
 #nagrywanie live'a
 #dzieli bloki wg metadanych 

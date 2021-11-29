@@ -65,6 +65,8 @@ else:
         file.clear_cache_records()
         
         #4. czyść stare pliki ze szpiega
+        logging.info("czyszczenie szpiega")
+        file.clear_spy(days=2)
 
 
     elif sys.argv[1] == "force_push":

@@ -6,6 +6,7 @@
     "path_playlists": "/home/liquidsoap/emiter/data/",
     "path_auditions": "/srv/ra/audycje/",
     "path_temp_records": "/srv/record/",
+    "path_spy": "/srv/ra/szpieg/",
     "path_liquidsoap_bin": "/home/liquidsoap/.opam/4.08.0/bin/liquidsoap",
     "url_program_api":"https://cloud.radioaktywne.pl/api",
 

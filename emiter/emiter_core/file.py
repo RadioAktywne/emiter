@@ -3,6 +3,7 @@
 from emiter_core import cfg, validate_file as vf
 import os
 import sys
+import time
 import shutil
 import audioread
 import subprocess
@@ -226,6 +227,23 @@ def clear_cache_records():
         if f.split(".")[-1] == "ogg":
             logging.info("\t"+f)
             os.remove(path+f)    
+
+def clear_spy(days=21):
+    """
+        clears expired audio files from spy dir
+    """
+    secs_expire = days * 24 * 3600
+    tnow = time.time()
+
+    path = cfg.cfg["path_spy"]
+    files = os.listdir()
+    for f in files:
+        time_file = os.path.getmtime(path+f)
+        if tnow-time_file > secs_expire:
+            logging.info("Removing expired file "+path+f+":")
+            os.remove(path+f)
+
+
 
 
 #długość pliku
