@@ -36,8 +36,6 @@ def send(command):
     return result
 
 def multisend(commands):
-    socket_path = cfg.cfg['home_path']+'socket'
-    commandlist = ''
     for c in commands:
         send(c)
         time.sleep(1)

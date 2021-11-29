@@ -176,7 +176,7 @@ def crosstrack(~czas_przejscia=2., ~margin=4., ~medium=-4., ~high=-15., ~width=2
 			#pomiń całkowicie poprzedni utwór
 			sequence([starting.source])
 		else
-			if starting.metadata["source"] == "playout" then
+			if starting.metadata["source"] == "playout" and ending.metadata["source"] != "playout" then
 				#gdy zaczyna się puszka
 				log("przejscie przed pucha")
 				add(fade.out(duration=1.,ending.source),starting.source)
