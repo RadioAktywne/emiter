@@ -30,16 +30,6 @@ elif sys.argv[1] == "restart":
     autoplaylist.rebuild_all_playlists()
     liquidsoap.start()
     eventlog.log_message("PGM_RESTART","")
-
-#eksperymentalnie
-elif sys.argv[1] == "fg":
-    autoplaylist.rebuild_all_playlists()
-    proc = liquidsoap.run()
-    try:
-        liquidsoap.trace(proc)
-    except KeyboardInterrupt:
-        liquidsoap.kill(proc)
-
         
 elif sys.argv[1] == "rebuild_playlist":
     if sys.argv[2] == "all":

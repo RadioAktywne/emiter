@@ -216,6 +216,8 @@ def merge_record_tracks(slug):
 
         #dodaj komendy
         subprocess.run([path_liquidsoap, cfg.cfg["home_path"]+"merge.liq","--", files_to_merge, out_file],check=True)
+    else:
+        logging.info("Nothing to merge")
 
 def clear_cache_records():
     path = cfg.cfg["path_temp_records"]
@@ -236,7 +238,7 @@ def clear_spy(days=21):
     tnow = time.time()
 
     path = cfg.cfg["path_spy"]
-    files = os.listdir()
+    files = os.listdir(path)
     for f in files:
         time_file = os.path.getmtime(path+f)
         if tnow-time_file > secs_expire:

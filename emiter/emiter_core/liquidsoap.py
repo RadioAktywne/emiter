@@ -18,14 +18,6 @@ cmd_fg = "/home/"+user+"/.opam/4.08.0/bin/liquidsoap "
 def run():
     return subprocess.Popen([cmd_fg, cfg.cfg['home_path']+"radio.liq" ], bufsize=1, stdout=subprocess.PIPE, universal_newlines=True)
 
-#śledzi nowe linie w procesie
-def trace(proc):
-    while proc.poll() is None:
-        line = proc.stdout.readline()
-
-        if "<mqtt>" in line:
-            logging.info(line)
-
 def kill(proc):
     logging.info("killing liquid")
     proc.kill()
