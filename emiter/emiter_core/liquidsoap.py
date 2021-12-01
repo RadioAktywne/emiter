@@ -73,7 +73,7 @@ def status():
     status = {"alive":True}
     try:
         #remove backslashes , convert from JSON and add to status
-        status.update(json.loads(input.replace("//","")))
+        status.update(json.loads(input.replace("\\","")))
     except JSONDecodeError:
         status = {"alive":False}    
     return status
