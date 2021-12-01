@@ -14,10 +14,6 @@ user = cfg.cfg['default_user']
 cmd = "/home/"+user+"/.opam/4.08.0/bin/liquidsoap -d "
 cmd_fg = "/home/"+user+"/.opam/4.08.0/bin/liquidsoap "
 
-#uruchamia w foreground
-def run():
-    return subprocess.Popen([cmd_fg, cfg.cfg['home_path']+"radio.liq" ], bufsize=1, stdout=subprocess.PIPE, universal_newlines=True)
-
 def kill(proc):
     logging.info("killing liquid")
     proc.kill()

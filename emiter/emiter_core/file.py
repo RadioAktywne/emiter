@@ -188,9 +188,6 @@ def merge_record_tracks(slug):
     path_temp_records = cfg.cfg["path_temp_records"]
     path_liquidsoap = cfg.cfg["path_liquidsoap_bin"]
     
-    #path_temp_records = "/srv/record/"
-    #path_liquidsoap = "/home/liquidsoap/.opam/4.08.0/bin/liquidsoap"
-
     files = sorted(os.listdir(path_temp_records))
    
     files_to_merge_list = []

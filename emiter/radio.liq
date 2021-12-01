@@ -146,13 +146,6 @@ PGM_studio=input.harbor("studio",
 		on_connect=studio_flag_up
 )
 
-# PGM_studio = input.srt(
-# 	id="studio_nometa",
-# 	port=8008,
-# 	on_disconnect=studio_flag_down,
-# 	on_connect=studio_flag_up
-
-# )
 def add_source_studio(m)
 	ignore(m)
 	[("source", "studio")]
@@ -256,14 +249,6 @@ output.icecast(%vorbis(quality=0.8),
 # 	name = cfg["output_name"],
 # 	description = cfg["output_desc"],
 # 	url = cfg["output_url"],
-# 	radio)
-
-# output.icecast(%wav, 
-# 	id = "PGM_local", 
-# 	host = "172.17.0.1", 
-# 	port = 8010,
-# 	password = "local", 
-# 	mount = "local",
 # 	radio)
 
 #szpieg
