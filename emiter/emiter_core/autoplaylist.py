@@ -139,7 +139,7 @@ def build_playlist(name,length=300):
                     if scan_album_repeat > 0:
                         if album != "" and album.lower() == p["album"].lower():
                             logging.debug("* odrzucono "+file_candidate)
-                            file_passed == False
+                            file_passed = False
                             break
 
                         scan_album_repeat -= 1
@@ -147,7 +147,7 @@ def build_playlist(name,length=300):
                     if scan_artist_repeat > 0:
                         if artist != "" and artist.lower() == p["artist"].lower():
                             logging.debug("$ odrzucono "+file_candidate)
-                            file_passed == False
+                            file_passed = False
                             break
                         scan_artist_repeat -= 1
 
