@@ -27,6 +27,8 @@
     "file_uid": 33,
     "file_gid": 133,
 
+    "spy_days_stored": 7,
+
     "auto_playlist_config":{
         "music_containers": {
             "MUSD": "/srv/ra/playlista/dzien/",
