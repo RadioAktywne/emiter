@@ -4,7 +4,7 @@
 #pobieranie configu
 cfg_path = argv(default="/etc/emiter.conf",1)
 cfg_file = file.contents(cfg_path)
-cfg = of_json(default=[("","")], cfg_file)
+cfg = json.parse(default=[("","")], cfg_file)
 
 home_path = cfg["home_path"]
 playlist_path = cfg["path_playlists"]
