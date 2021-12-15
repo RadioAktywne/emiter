@@ -101,7 +101,6 @@ def build_playlist(name,length=300):
 
             #odczyt metadanych
             meta = mutagen.File(file_candidate)
-            #print(meta)
             
             try:
                 album = meta['album'][0]

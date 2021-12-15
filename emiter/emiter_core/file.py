@@ -10,10 +10,7 @@ import subprocess
 
 import logging
 
-#na serwerze RA (i u mnie na pc tak samo)
-#uid = 33 #www-data
-#gid = 133 #liquidsoap (grupa)
-
+#get UID and GID from cfg
 uid = cfg.cfg["file_uid"]
 gid = cfg.cfg["file_gid"]
 
@@ -52,8 +49,6 @@ def update_audition_dirs(slugs):
         if os.path.isfile(cfg.cfg['path_auditions']+slug) == False:
             if slug is not "":
                 create_audition_dirs(slug)
-
-    #todo może jakieś archiwizowanie dawnych audycji
 
 
 def get_playout_files(slug,is_replay):
