@@ -313,3 +313,10 @@ def send_status(_)
 
 end
 server.register("status",send_status)
+
+#Close app using telnet/socket cmd
+def shutdown_app(_)
+	shutdown()
+	"Done"
+end
+server.register("shutdown",shutdown_app)
