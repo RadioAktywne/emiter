@@ -2,6 +2,8 @@ FROM debian:10
 
 ENV TZ Europe/Warsaw
 
+ENV AM_I_IN_DOCKER true
+
 # Add package repo
 RUN echo "deb http://deb.debian.org/debian stable main contrib non-free" > /etc/apt/sources.list
 

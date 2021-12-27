@@ -12,6 +12,13 @@ import logging
 
 logging.basicConfig(handlers=[logging.FileHandler('/var/log/emiter/emiter.log'),logging.StreamHandler()], level=logging.INFO,format='%(asctime)s %(levelname)s: %(message)s')
 
+
+if sys.argv[1] in ["start","stop","restart"]:
+    key = os.environ.get('AM_I_IN_DOCKER', False)
+    if key:
+        logging.warning("start/stop/restart functions are unavailable in docker container.")
+        exit()
+
 if sys.argv[1] == "start":
     #get_timeslots.sync(cfg.cfg["path_schedules"])
     autoplaylist.rebuild_all_playlists()
