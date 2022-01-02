@@ -1,11 +1,8 @@
 #!/bin/bash
 
-#create audio dirs
-mkdir /srv/emiter
-mkdir /srv/emiter/record
-mkdir /srv/emiter/programs
-mkdir /srv/emiter/playlist
-chown -R liquidsoap:liquidsoap /srv/emiter
+#create temporary record dir
+mkdir /srv/record/
+chown liquidsoap:liquidsoap /srv/record/
 
 #create log dir
 mkdir /var/log/emiter/

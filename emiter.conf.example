@@ -4,11 +4,11 @@
     "home_path": "/home/liquidsoap/emiter/",
     "path_schedules": "/home/liquidsoap/emiter/data/",
     "path_playlists": "/home/liquidsoap/emiter/data/",
-    "path_auditions": "/srv/emiter/programs/",
-    "path_temp_records": "/srv/emiter/record/",
-    "path_spy": "/srv/emiter/spy/",
+    "path_auditions": "/srv/ra/audycje/",
+    "path_temp_records": "/srv/record/",
+    "path_spy": "/srv/ra/szpieg/",
     "path_liquidsoap_bin": "/home/liquidsoap/.opam/4.08.0/bin/liquidsoap",
-    "url_program_api":"https://localhost:8888/api",
+    "url_program_api":"https://cloud.radioaktywne.pl/api",
 
     "input_studio_prefix":"",
     "input_studio_user":"source",
@@ -24,16 +24,16 @@
     "output_url": "http://radioaktywne.pl",
 
     "default_user": "liquidsoap",
-    "file_uid": 115,
-    "file_gid": 33,
+    "file_uid": 33,
+    "file_gid": 133,
 
-    "spy_days_stored": 21,
+    "spy_days_stored": 7,
 
     "auto_playlist_config":{
         "music_containers": {
-            "MUSD": "/srv/emiter/playlist/music_day/",
-            "MUSN": "/srv/emiter/playlist/music_night/",
-            "JIN": "/srv/emiter/playlist/jingles/"
+            "MUSD": "/srv/ra/playlista/dzien/",
+            "MUSN": "/srv/ra/playlista/noc/",
+            "JIN": "/srv/ra/jingle/"
         },
 
         "playlists": {
