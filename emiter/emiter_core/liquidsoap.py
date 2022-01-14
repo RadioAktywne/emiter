@@ -14,18 +14,6 @@ user = cfg.cfg['default_user']
 cmd = "/home/"+user+"/.opam/4.08.0/bin/liquidsoap -d "
 cmd_fg = "/home/"+user+"/.opam/4.08.0/bin/liquidsoap "
 
-#uruchamia w foreground
-def run():
-    return subprocess.Popen([cmd_fg, cfg.cfg['home_path']+"radio.liq" ], bufsize=1, stdout=subprocess.PIPE, universal_newlines=True)
-
-#śledzi nowe linie w procesie
-def trace(proc):
-    while proc.poll() is None:
-        line = proc.stdout.readline()
-
-        if "<mqtt>" in line:
-            logging.info(line)
-
 def kill(proc):
     logging.info("killing liquid")
     proc.kill()
@@ -36,8 +24,6 @@ def send(command):
     return result
 
 def multisend(commands):
-    socket_path = cfg.cfg['home_path']+'socket'
-    commandlist = ''
     for c in commands:
         send(c)
         time.sleep(1)
@@ -86,7 +72,8 @@ def status():
     
     status = {"alive":True}
     try:
-        status.update(json.loads(input))
+        #remove backslashes , convert from JSON and add to status
+        status.update(json.loads(input.replace("\\","")))
     except JSONDecodeError:
         status = {"alive":False}    
     return status

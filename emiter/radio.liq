@@ -4,29 +4,26 @@
 #pobieranie configu
 cfg_path = argv(default="/etc/emiter.conf",1)
 cfg_file = file.contents(cfg_path)
-#print(cfg_file)
-cfg = of_json(default=[("","")], cfg_file)
+cfg = json.parse(default=[("","")], cfg_file)
 
-
-#TODO import z zewnątrz
 home_path = cfg["home_path"]
 playlist_path = cfg["path_playlists"]
 
-set("log.file.path","/var/log/emiter/liquidsoap.log") #ścieżka do loga
-set("log.stdout",true)
+settings.log.file.path.set("/var/log/emiter/liquidsoap.log") #ścieżka do loga
+settings.log.stdout.set(true)
 
 #telnet - w celach debugowych
-set("server.telnet",true)
-set("server.telnet.bind_addr","127.0.0.1")
-set("server.telnet.port",int_of_string(cfg["telnet_port"]))
-set("server.timeout",-1.)
+settings.server.telnet.set(true)
+settings.server.telnet.bind_addr.set("127.0.0.1")
+settings.server.telnet.port.set(int_of_string(cfg["telnet_port"]))
+settings.server.timeout.set(-1.)
 
 #socket - do integracji
-set("server.socket",true)
-set("server.socket.path","/var/run/emiter/socket")
+settings.server.socket.set(true)
+settings.server.socket.path.set("/var/run/emiter/socket")
 
-set("init.daemon.pidfile.path",home_path^"radio.pid")
-set("init.daemon.pidfile",true)
+settings.init.daemon.pidfile.path.set(home_path^"radio.pid")
+settings.init.daemon.pidfile.set(true)
 
 def generate_playlist(pl_code)
 
@@ -146,13 +143,6 @@ PGM_studio=input.harbor("studio",
 		on_connect=studio_flag_up
 )
 
-# PGM_studio = input.srt(
-# 	id="studio_nometa",
-# 	port=8008,
-# 	on_disconnect=studio_flag_down,
-# 	on_connect=studio_flag_up
-
-# )
 def add_source_studio(m)
 	ignore(m)
 	[("source", "studio")]
@@ -176,7 +166,7 @@ def crosstrack(~czas_przejscia=2., ~margin=4., ~medium=-4., ~high=-15., ~width=2
 			#pomiń całkowicie poprzedni utwór
 			sequence([starting.source])
 		else
-			if starting.metadata["source"] == "playout" then
+			if starting.metadata["source"] == "playout" and ending.metadata["source"] != "playout" then
 				#gdy zaczyna się puszka
 				log("przejscie przed pucha")
 				add(fade.out(duration=1.,ending.source),starting.source)
@@ -258,15 +248,8 @@ output.icecast(%vorbis(quality=0.8),
 # 	url = cfg["output_url"],
 # 	radio)
 
-# output.icecast(%wav, 
-# 	id = "PGM_local", 
-# 	host = "172.17.0.1", 
-# 	port = 8010,
-# 	password = "local", 
-# 	mount = "local",
-# 	radio)
-
-#TODO szpieg
+#szpieg
+output.file(%vorbis(quality=0.6),cfg["path_spy"]^"%Y-%m-%d_%H-%M-%S.ogg",radio,reopen_when={0m},fallible=true)
 
 #nagrywanie live'a
 #dzieli bloki wg metadanych 
@@ -330,3 +313,10 @@ def send_status(_)
 
 end
 server.register("status",send_status)
+
+#Close app using telnet/socket cmd
+def shutdown_app(_)
+	shutdown()
+	"Done"
+end
+server.register("shutdown",shutdown_app)

@@ -3,16 +3,14 @@
 from emiter_core import cfg, validate_file as vf
 import os
 import sys
+import time
 import shutil
 import audioread
 import subprocess
 
 import logging
 
-#na serwerze RA (i u mnie na pc tak samo)
-#uid = 33 #www-data
-#gid = 133 #liquidsoap (grupa)
-
+#get UID and GID from cfg
 uid = cfg.cfg["file_uid"]
 gid = cfg.cfg["file_gid"]
 
@@ -31,7 +29,9 @@ def create(path):
     except FileExistsError:
         logging.info(path + " Juz istnieje")
     except PermissionError:
-        logging.info("[PER] skrypt nie ma uprawnień do tego. Musi to zrobić root.")
+        logging.error("Skrypt nie ma uprawnień do tego. Musi to zrobić root.")
+    except FileNotFoundError:
+        logging.error("Katalog matka nie istnieje")
 
 
 def create_audition_dirs(slug):
@@ -49,8 +49,6 @@ def update_audition_dirs(slugs):
         if os.path.isfile(cfg.cfg['path_auditions']+slug) == False:
             if slug is not "":
                 create_audition_dirs(slug)
-
-    #todo może jakieś archiwizowanie dawnych audycji
 
 
 def get_playout_files(slug,is_replay):
@@ -185,9 +183,6 @@ def merge_record_tracks(slug):
     path_temp_records = cfg.cfg["path_temp_records"]
     path_liquidsoap = cfg.cfg["path_liquidsoap_bin"]
     
-    #path_temp_records = "/srv/record/"
-    #path_liquidsoap = "/home/liquidsoap/.opam/4.08.0/bin/liquidsoap"
-
     files = sorted(os.listdir(path_temp_records))
    
     files_to_merge_list = []
@@ -213,6 +208,8 @@ def merge_record_tracks(slug):
 
         #dodaj komendy
         subprocess.run([path_liquidsoap, cfg.cfg["home_path"]+"merge.liq","--", files_to_merge, out_file],check=True)
+    else:
+        logging.info("Nothing to merge")
 
 def clear_cache_records():
     path = cfg.cfg["path_temp_records"]
@@ -224,6 +221,23 @@ def clear_cache_records():
         if f.split(".")[-1] == "ogg":
             logging.info("\t"+f)
             os.remove(path+f)    
+
+def clear_spy(days=21):
+    """
+        clears expired audio files from spy dir
+    """
+    secs_expire = days * 24 * 3600
+    tnow = time.time()
+
+    path = cfg.cfg["path_spy"]
+    files = os.listdir(path)
+    for f in files:
+        time_file = os.path.getmtime(path+f)
+        if tnow-time_file > secs_expire:
+            logging.info("Removing expired file "+path+f+":")
+            os.remove(path+f)
+
+
 
 
 #długość pliku

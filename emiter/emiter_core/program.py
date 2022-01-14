@@ -7,6 +7,7 @@ import requests
 #import datetime
 import time
 import json
+import os
 
 import logging
 
@@ -32,6 +33,11 @@ class Program:
             with open(cfg.cfg['path_schedules']+"timeslots_"+sufix,mode='w') as f:
                 f.write(rq.text)
                 f.close()
+            #zmień uprawnienia
+            try:
+                os.chmod(cfg.cfg['path_schedules']+"timeslots_"+sufix, 0o777)
+            except PermissionError:
+                pass
 
         except JSONDecodeError:
             
@@ -53,6 +59,11 @@ class Program:
             with open(cfg.cfg['path_schedules']+"programs_"+sufix,mode='w') as f:
                 f.write(rq.text)
                 f.close()
+            #zmień uprawnienia
+            try:
+                os.chmod(cfg.cfg['path_schedules']+"programs_"+sufix, 0o777)
+            except PermissionError:
+                pass
 
         except JSONDecodeError:
             

@@ -2,6 +2,8 @@ FROM debian:10
 
 ENV TZ Europe/Warsaw
 
+ENV AM_I_IN_DOCKER true
+
 # Add package repo
 RUN echo "deb http://deb.debian.org/debian stable main contrib non-free" > /etc/apt/sources.list
 
@@ -104,8 +106,8 @@ RUN chmod +x /home/liquidsoap/emiter/emiter.py
 WORKDIR /home/liquidsoap/emiter
 
 # START everything
-# - rebuild playlists and start liquidsoap in bg (emiter.py start) TODO
-# - run cron in fg
+# - rebuild playlists and start cron in bg
+# - run liquidsoap in fg
 ENTRYPOINT ["sh", "/home/liquidsoap/emiter.sh"]
 
 #ENTRYPOINT ["/usr/sbin/cron", "-f"]
