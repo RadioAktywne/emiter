@@ -1,4 +1,5 @@
 {
+    "mqtt_broker_passwd":"###########",
     "telnet_port":"2137",
 
     "home_path": "/home/liquidsoap/emiter/",

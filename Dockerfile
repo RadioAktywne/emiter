@@ -48,7 +48,11 @@ RUN apt-get -y update && \
     python3 \
     python3-pip \
     socat \
-    procps
+    procps \
+    mosquitto \
+    mosquitto_clients \
+    jq
+
 
 # Set up filesystem and user
 USER root
@@ -81,6 +85,8 @@ RUN pip3 install -r requirements.txt
 #copy config file
 #consider bind mount for changing conf from host in fly 
 COPY emiter.conf /etc/
+
+#copy mosquitto.conf file TODO
 
 #set timezone
 # ENV TZ does not work for cron

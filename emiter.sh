@@ -10,5 +10,8 @@ su liquidsoap -c "uvicorn api:app --port 10000 --host 0.0.0.0 --log-level warnin
 #run cron
 /usr/sbin/cron
 
+#run MQTT broker
+/usr/sbin/mosquitto -c /etc/mosquitto/mosquitto.conf &
+
 #run liquidsoap
 su liquidsoap -c "/home/liquidsoap/.opam/4.08.0/bin/liquidsoap /home/liquidsoap/emiter/radio.liq"
