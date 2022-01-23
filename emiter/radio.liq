@@ -216,7 +216,7 @@ radio.on_metadata(capture_meta)
 safe = single(home_path^"audio/radioniedziala.mp3")
 radio = fallback(transition_length=2.,[radio,init_jingle,safe])
 
-#postprocessing - do srogiego dostrojenia, normalizacja szaleje z poziomami.
+#postprocessing
 radio = orban(radio)
 
 #wyjściowe streamy
@@ -268,7 +268,6 @@ end
 
 
 #status - Zwraca dane w JSON o aktualnie granym tracku i stanie ogólnym systemu
-#TODO
 def send_status(_)
 	meta = !now_meta
 	playout_rdy = playout_ready("")

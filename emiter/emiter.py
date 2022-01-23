@@ -20,7 +20,6 @@ if sys.argv[1] in ["start","stop","restart"]:
         exit()
 
 if sys.argv[1] == "start":
-    #get_timeslots.sync(cfg.cfg["path_schedules"])
     autoplaylist.rebuild_all_playlists()
     liquidsoap.start()
     eventlog.log_message("PGM_START","")
@@ -33,7 +32,6 @@ elif sys.argv[1] == "restart":
     liquidsoap.stop()
     time.sleep(2)
     
-    #get_timeslots.sync(cfg.cfg["path_schedules"])
     autoplaylist.rebuild_all_playlists()
     liquidsoap.start()
     eventlog.log_message("PGM_RESTART","")
