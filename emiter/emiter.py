@@ -84,7 +84,11 @@ else:
                     playouts = file.get_playout_files(aud['slug'],aud['replay'])
 
                     if len(playouts) > 0:
-                        eventlog.log_message("PLAYOUT_REQEST",aud['slug'])
+                        if aud['replay']:
+                            eventlog.log_message("REPLAY_REQEST",aud['slug'])
+                        else:
+                            eventlog.log_message("PLAYOUT_REQUEST",aud['slug'])
+                        
                         for playout in playouts:
                             liquidsoap.send("playout.push '"+ playout['path'] +"'")
                             logging.info("request pliku "+playout['path'])
