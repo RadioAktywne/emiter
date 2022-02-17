@@ -216,13 +216,13 @@ radio.on_metadata(capture_meta)
 safe = single(home_path^"audio/radioniedziala.mp3")
 radio = fallback(transition_length=2.,[radio,init_jingle,safe])
 
-#postprocessing - do srogiego dostrojenia, normalizacja szaleje z poziomami.
+#postprocessing
 radio = orban(radio)
 
 #wyjściowe streamy
 output.icecast(%vorbis(quality=0.8), 
 	id = "PGM", 
-	icy_metadata="false",
+	icy_metadata="true",
 	encoding="UTF-8",
 	host = cfg["output_host"], 
 	port = int_of_string(cfg["output_port"]), 
@@ -234,19 +234,19 @@ output.icecast(%vorbis(quality=0.8),
 	url = cfg["output_url"],
 	radio)
 
-# output.icecast(%mp3(bitrate=256), 
-# 	id = "PGM_mp3", 
-# 	icy_metadata="false",
-# 	encoding="UTF-8",
-# 	host = cfg["output_host"], 
-# 	port = int_of_string(cfg["output_port"]), 
-# 	password = cfg["output_password"], 
-# 	mount = cfg["output_prefix"]^"mp3",
-# 	genre = "",
-# 	name = cfg["output_name"],
-# 	description = cfg["output_desc"],
-# 	url = cfg["output_url"],
-# 	radio)
+output.icecast(%mp3(bitrate=256), 
+	id = "PGM_mp3", 
+	icy_metadata="true",
+	encoding="UTF-8",
+	host = cfg["output_host"], 
+	port = int_of_string(cfg["output_port"]), 
+	password = cfg["output_password"], 
+	mount = cfg["output_prefix"]^"mp3",
+	genre = "",
+	name = cfg["output_name"],
+	description = cfg["output_desc"],
+	url = cfg["output_url"],
+	radio)
 
 #szpieg
 output.file(%vorbis(quality=0.6),cfg["path_spy"]^"%Y-%m-%d_%H-%M-%S.ogg",radio,reopen_when={0m},fallible=true)
@@ -268,7 +268,6 @@ end
 
 
 #status - Zwraca dane w JSON o aktualnie granym tracku i stanie ogólnym systemu
-#TODO
 def send_status(_)
 	meta = !now_meta
 	playout_rdy = playout_ready("")
