@@ -58,7 +58,7 @@ def generate_playlist(pl_code)
 	end
 
 	id = "playlista_"^pl_code
-	request.dynamic.list(id=id,prefetch=4,new_request, timeout=6.)
+	request.dynamic(id=id,prefetch=4,new_request, timeout=6.)
 end
 
 now_meta = ref([])

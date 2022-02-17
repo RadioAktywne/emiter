@@ -18,5 +18,5 @@ list.iter(add_file_in,filenames)
 fullfile = sequence(!files)
 clock.assign_new(sync="none",[fullfile])
 
-output.file(%vorbis, file_out,fallible=true,
+output.file(%vorbis(quality=0.8), file_out,fallible=true,
                      on_stop=shutdown,fullfile)   
