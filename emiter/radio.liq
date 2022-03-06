@@ -54,7 +54,7 @@ def generate_playlist(pl_code)
 		rq = request.create('annotate:code="'^code^'":'^file)
 
 		#zwróć request
-		[rq]
+		rq
 	end
 
 	id = "playlista_"^pl_code
