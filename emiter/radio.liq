@@ -11,6 +11,7 @@ playlist_path = cfg["path_playlists"]
 
 settings.log.file.path.set("/var/log/emiter/liquidsoap.log") #ścieżka do loga
 settings.log.stdout.set(true)
+settings.log.file.perms.set(0o644)
 
 #telnet - w celach debugowych
 settings.server.telnet.set(true)
@@ -51,7 +52,8 @@ def generate_playlist(pl_code)
 
 		#stwórz request i przechowaj czas w metadanych
 		#TODO wylicz długość utworu i podaj do annotate
-		rq = request.create('annotate:code="'^code^'":'^file)
+		dur = string_of_float(request.duration(file))
+		rq = request.create('annotate:code="'^code^'",duration="'^dur^'":'^file)
 
 		#zwróć request
 		rq
@@ -62,30 +64,6 @@ def generate_playlist(pl_code)
 end
 
 now_meta = ref([])
-
-def capture_meta(m)
-	#przechwyt metadanych
-
-	if m["filename"] != "" or m["source"] == "studio" then
-		now_meta := m
-	end
-
-	file_path = "/var/log/emiter/log.csv"
-	
-	timestamp = int_of_float(time())
-	code = m["code"]
-	artist = m["artist"]
-	title = m["title"]
-	album = m["album"]
-	audio_file = m["filename"]
-
-	log_record = "#{timestamp}\t#{code}\t#{title}\t#{artist}\t#{album}\t#{audio_file}\n"
-
-	file.write(data=log_record, append=true, file_path)
-
-	#nic nie zwracaj
-	ignore(false)
-end
 
 #jingiel startowy
 #potrzebny po to, ze po odpaleniu skryptu playlista potrzebuje trochę czasu by się wygenerować 
@@ -112,9 +90,27 @@ def mqtt_publish_playlist(current_track_meta)
 	#TODO
 	# publikuj info o nowej ścieżce i kolejce
 
-	# if current_track_meta["source"] == "playlista_muzyka_dzien" then
-	# 	list.iter(build_json_meta,playlist_d.queue())
-	# end
+	text = ref("[")
+
+	text := !text^json.stringify(current_track_meta)
+	def add_to_meta_str(r)
+		#log("adding request")
+		meta_str = json.stringify(request.metadata(r))
+		#log(meta_str)
+		text := !text^"\n"^meta_str
+	end
+
+	if current_track_meta["source"] == "playlista_muzyka_dzien" then
+		list.iter(add_to_meta_str,playlist_d.queue())
+	elsif current_track_meta["source"] == "playlista_muzyka_noc" then
+		list.iter(add_to_meta_str,playlist_n.queue())
+	end
+
+	text := !text^"]"
+
+	cache_file_path = playlist_path^"playlist.json"
+	file.write(data=!text, append=false,cache_file_path)
+	
 
 end
 PGM_standby.on_track(mqtt_publish_playlist)
@@ -209,6 +205,86 @@ end
 #aplikuj przejścia między studiem a automatem
 radio = fallback(track_sensitive=false, transition_length=1.2, transitions=[live_start, live_stop], [PGM_studio,PGM_standby])
 
+
+#czy do playout/block jest dodany port?
+def playout_ready(_)
+	source.is_ready(playout) or source.is_ready(block)
+end
+
+
+#status - Zwraca dane w JSON o aktualnie granym tracku i stanie ogólnym systemu
+def status()
+	meta = !now_meta
+	playout_rdy = playout_ready("")
+	stat = json()
+
+	if PGM_studio.is_ready() then
+		stat.add("source","studio")
+		stat.add("code","LIVE")
+		stat.add("on_air_timestamp",-1)
+		stat.add("filename","")
+
+		if meta["source"] == "studio" then
+		
+			#studio aktywne i zaktualizowano metadane
+			stat.add("title",meta["title"])
+			stat.add("artist",meta["artist"])
+			stat.add("program_code",meta["album"])
+			
+		else
+			#studio aktywne ale jeszcze nie zaktualizowano metadanych
+			#dodaj standardowe (puste) dane
+			stat.add("title","")
+			stat.add("artist","")
+			stat.add("program_code","unknown")
+		end
+	else
+		#studio nieaktywne, gra automat (standby)
+		stat.add("source",meta["source"])
+		stat.add("code",meta["code"])
+		stat.add("on_air_timestamp",int_of_float(float_of_string(meta["on_air_timestamp"])))
+		stat.add("title",meta["title"])
+		stat.add("artist",meta["artist"])
+		stat.add("program_code","")
+		stat.add("filename",meta["filename"])
+	end
+	
+	stat.add("playout_ready",playout_rdy)
+
+	#zwróć dane w JSON
+	json.stringify(stat)
+
+end
+
+def capture_meta(m)
+	#przechwyt metadanych
+
+	if m["filename"] != "" or m["source"] == "studio" then
+		now_meta := m
+	end
+
+	file_path = "/var/log/emiter/log.csv"
+	
+	timestamp = int_of_float(time())
+	code = m["code"]
+	artist = m["artist"]
+	title = m["title"]
+	album = m["album"]
+	audio_file = m["filename"]
+
+	log_record = "#{timestamp}\t#{code}\t#{title}\t#{artist}\t#{album}\t#{audio_file}\n"
+
+	file.write(data=log_record, append=true, file_path)
+
+	#update JSON cache
+	cache_file_path = playlist_path^"status.json"
+	file.write(data=status(), append=false,cache_file_path)
+		
+
+	#nic nie zwracaj
+	ignore(false)
+end
+
 #mapowanie metadanych do funkcji zapisującej do loga
 radio.on_metadata(capture_meta)
 
@@ -261,55 +337,8 @@ end
 output.file(%vorbis(quality=0.8), cfg["path_temp_records"]^"%Y-%m-%d_%H-%M-%S_$(album)", PGM_studio,
 reopen_on_metadata=true, reopen_when={03m}, on_close=on_file, fallible=true)
 
-#czy do playout/block jest dodany port?
-def playout_ready(_)
-	source.is_ready(playout) or source.is_ready(block)
-end
-
-
-#status - Zwraca dane w JSON o aktualnie granym tracku i stanie ogólnym systemu
 def send_status(_)
-	meta = !now_meta
-	playout_rdy = playout_ready("")
-	stat = json()
-
-	if PGM_studio.is_ready() then
-		stat.add("source","studio")
-		stat.add("code","LIVE")
-		stat.add("on_air_timestamp",-1)
-		stat.add("filename","")
-
-		if meta["source"] == "studio" then
-		
-			#studio aktywne i zaktualizowano metadane
-			stat.add("title",meta["title"])
-			stat.add("artist",meta["artist"])
-			stat.add("program_code",meta["album"])
-			
-		else
-			#studio aktywne ale jeszcze nie zaktualizowano metadanych
-			#dodaj standardowe (puste) dane
-			stat.add("title","")
-			stat.add("artist","")
-			stat.add("program_code","unknown")
-		end
-	else
-		#studio nieaktywne, gra automat (standby)
-		stat.add("source",meta["source"])
-		stat.add("code",meta["code"])
-		stat.add("on_air_timestamp",int_of_float(float_of_string(meta["on_air_timestamp"])))
-		stat.add("title",meta["title"])
-		stat.add("artist",meta["artist"])
-		stat.add("program_code","")
-		stat.add("filename",meta["filename"])
-	end
-	
-	#playout_rdy=playout_ready("")
-	stat.add("playout_ready",playout_rdy)
-
-	#zwróć dane w JSON
-	json.stringify(stat)
-
+	status()
 end
 server.register("status",send_status)
 
