@@ -7,7 +7,7 @@
     "path_auditions": "/srv/emiter/programs/",
     "path_temp_records": "/srv/record/",
     "path_spy": "/srv/emiter/spy/",
-    "path_liquidsoap_bin": "/home/liquidsoap/.opam/4.08.0/bin/liquidsoap",
+    "path_liquidsoap_bin": "/usr/bin/liquidsoap",
     "url_program_api":"https://cloud.radioaktywne.pl/api",
 
     "input_studio_prefix":"",
