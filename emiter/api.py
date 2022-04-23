@@ -1,3 +1,4 @@
+import json
 from emiter_core import cfg
 from fastapi import FastAPI
 
@@ -10,4 +11,4 @@ def status():
     status_path = cfg.cfg["path_playlists"]+"status.json"
 
     with open(status_path,mode='r',encoding='utf8') as f:
-        return f.read()
+        return json.loads(f.read())
