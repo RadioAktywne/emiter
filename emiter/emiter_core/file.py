@@ -96,6 +96,16 @@ def get_track_files(fp):
         #posortuj pliki 
         files = sorted(os.listdir(fp))
 
+        #jeżeli są foldery, to wybierz pierwszy alfabetycznie i dalej wykorzystuj go jako ścieżkę do puszki
+        dirs = []
+        for f in files:
+            if os.path.isdir(fp + f):
+                dirs.append(fp + f)
+
+        if len(dirs) > 0:
+            fp = dirs[0] + "/"
+            files = sorted(os.listdir(fp))
+
         for f in files:
 
             #rozszerzenie pliku
@@ -150,12 +160,23 @@ def replay_file_flow(slug):
         return False
     
     #jeśli są, to
+    #jeżeli są foldery, to wybierz pierwszy alfabetycznie i dalej wykorzystuj go jako ścieżkę do puszki
+    path_puszka = path + "/puszka/"
+    dirs = []
+    for f in files:
+        if os.path.isdir(path_puszka + f):
+            dirs.append(path_puszka + f)
+
+    if len(dirs) > 0:
+        path_puszka = dirs[0] + "/"
+        files = sorted(os.listdir(path_puszka))
+
     for f in files:   
         #przenoś tylko pliki a nie katalogi
-        if not os.path.isdir(path+"/puszka/"+f):
+        if not os.path.isdir(path_puszka+f):
             #kopiuj pliki do /powtorka
             try:
-                shutil.copy(path + '/puszka/'+f, path + '/powtorka/')
+                shutil.copy(path_puszka+f, path + '/powtorka/')
                 logging.info("plik "+f+" skopiowano pomyślnie do katalogu /powtorka")
             except IOError as e:
                 logging.warn("Nie udało się skopiować pliku %s" % e)
@@ -170,14 +191,24 @@ def replay_file_flow(slug):
 def clear_playout(slug):
     #czyści katalog /puszka
     path = cfg.cfg["path_auditions"] + slug
-
-    #czyść katalog /powtorka
-    logging.info("czyszczenie  /"+slug+"/puszka:")
-
-    files = os.listdir(path+ '/puszka')
+    #jeżeli są foldery, to wybierz pierwszy alfabetycznie i usuń go
+    path_puszka = path + "/puszka/"
+    dirs = []
     for f in files:
-        logging.info("\t"+f)
-        os.remove(path+'/puszka/'+f)    
+        if os.path.isdir(path_puszka + f):
+            dirs.append(path_puszka + f)
+
+    if len(dirs) > 0:
+        path_puszka = dirs[0] + "/"
+        logging.info("czyszczenie  /"+path_puszka)
+        shutil.rmtree(path_puszka)
+    else:       #a jeżeli nie ma folderów
+        logging.info("czyszczenie  /"+slug+"/puszka:")
+
+        files = os.listdir(path+ '/puszka')
+        for f in files:
+            logging.info("\t"+f)
+            os.remove(path+'/puszka/'+f)    
 
 def merge_record_tracks(slug):
     path_temp_records = cfg.cfg["path_temp_records"]
